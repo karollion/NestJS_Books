@@ -4,6 +4,9 @@
 
 NestJS server with books
 
+Server run on `localhost:3030`
+Data Base was in `mysql://localhost:3306/booksdb`
+
 ## Installation
 
 ```bash
