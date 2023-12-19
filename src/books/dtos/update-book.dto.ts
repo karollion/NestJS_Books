@@ -1,4 +1,12 @@
-import { IsInt, IsNotEmpty, IsString, Length, Max, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class UpdateBookDTO {
   @IsNotEmpty()
@@ -17,4 +25,9 @@ export class UpdateBookDTO {
   @Min(0)
   @Max(1000)
   price: number;
+
+  @IsNotEmpty()
+  @IsUUID()
+  @IsString()
+  authorId: string;
 }

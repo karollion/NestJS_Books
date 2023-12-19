@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Book } from '@prisma/client';
 import { PrismaService } from 'src/shared/services/prisma.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class BooksService {
@@ -42,6 +42,8 @@ export class BooksService {
     } catch (error) {
       if (error.code === 'P2025')
         throw new BadRequestException('400 Bad Request');
+      if (error.code === 'P2002')
+        throw new ConflictException('409 Conflict Title is already taken');
       throw error;
     }
   }
@@ -50,15 +52,21 @@ export class BooksService {
     id: Book['id'],
     bookData: Omit<Book, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<Book> {
-    const { authorId, ...otherData } = bookData;
-    return this.prismaService.book.update({
-      where: { id },
-      data: {
-        ...otherData,
-        author: {
-          connect: { id: authorId },
+    try {
+      const { authorId, ...otherData } = bookData;
+      return this.prismaService.book.update({
+        where: { id },
+        data: {
+          ...otherData,
+          author: {
+            connect: { id: authorId },
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      if (error.code === 'P2002')
+        throw new ConflictException('Title is already taken');
+      throw error;
+    }
   }
 }

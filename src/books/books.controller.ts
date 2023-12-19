@@ -29,15 +29,6 @@ export class BooksController {
     return book;
   }
 
-  @Delete('/:id')
-  async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
-    if (!(await this.booksService.getById(id)))
-      throw new NotFoundException('Book not found');
-
-    await this.booksService.deleteById(id);
-    return { success: true };
-  }
-
   @Post('/')
   create(@Body() bookData: CreateBookDTO) {
     return this.booksService.create(bookData);
@@ -52,6 +43,15 @@ export class BooksController {
       throw new NotFoundException('Book not found');
 
     await this.booksService.updateById(id, bookData);
+    return { success: true };
+  }
+
+  @Delete('/:id')
+  async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
+    if (!(await this.booksService.getById(id)))
+      throw new NotFoundException('Book not found');
+
+    await this.booksService.deleteById(id);
     return { success: true };
   }
 }
