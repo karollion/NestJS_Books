@@ -46,7 +46,7 @@ export class BooksService {
     }
   }
 
-  public updateById(
+  public async updateById(
     id: Book['id'],
     bookData: Omit<Book, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<Book> {
