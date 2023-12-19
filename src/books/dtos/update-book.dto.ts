@@ -1,6 +1,6 @@
 import {
-  IsInt,
   IsNotEmpty,
+  IsNumber,
   IsString,
   IsUUID,
   Length,
@@ -15,13 +15,13 @@ export class UpdateBookDTO {
   title: string;
 
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   @Min(1)
   @Max(5)
   rating: number;
 
   @IsNotEmpty()
-  @IsInt()
+  @IsNumber()
   @Min(0)
   @Max(1000)
   price: number;

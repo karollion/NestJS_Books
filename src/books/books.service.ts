@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Book } from '@prisma/client';
 import { PrismaService } from 'src/shared/services/prisma.service';
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class BooksService {
@@ -40,11 +40,9 @@ export class BooksService {
         },
       });
     } catch (error) {
-      if (error.code === 'P2025')
-        throw new BadRequestException('400 Bad Request');
       if (error.code === 'P2002')
         throw new ConflictException('409 Conflict Title is already taken');
-      throw error;
+      else throw '404 Bad request';
     }
   }
 
@@ -66,7 +64,7 @@ export class BooksService {
     } catch (error) {
       if (error.code === 'P2002')
         throw new ConflictException('Title is already taken');
-      throw error;
+      else throw '404 Bad request';
     }
   }
 }
