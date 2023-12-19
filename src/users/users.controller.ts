@@ -17,11 +17,4 @@ export class UsersController {
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
-
-  @Get('/:email')
-  async getByEmail(@Param('email') email: string) {
-    const user = await this.usersService.getByEmail(email);
-    if (!user) throw new NotFoundException('User not found');
-    return user;
-  }
 }
