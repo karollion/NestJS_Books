@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { Book } from '@prisma/client';
+import { Injectable, ConflictException } from '@nestjs/common';
+import { Book, UserOnBooks } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class BooksService {
@@ -41,9 +40,25 @@ export class BooksService {
       });
     } catch (error) {
       if (error.code === 'P2002')
-        throw new ConflictException('409 Conflict Title is already taken');
+        throw new ConflictException('Conflict Title is already taken');
       else throw '404 Bad request';
     }
+  }
+
+  public async addToFav(favBookData: Omit<UserOnBooks, 'id'>): Promise<Book> {
+    const { userId, bookId } = favBookData;
+    return await this.prismaService.book.update({
+      where: { id: bookId },
+      data: {
+        users: {
+          create: {
+            user: {
+              connect: { id: userId },
+            },
+          },
+        },
+      },
+    });
   }
 
   public async updateById(

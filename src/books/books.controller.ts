@@ -62,7 +62,10 @@ export class BooksController {
 
   @Post('/like')
   @UseGuards(JwtAuthGuard)
-  like(@Body() bookData: CreateBookDTO) {
-    return this.booksService.create(bookData);
+  async addTofav(@Body() favBookData) {
+    if (!(await this.booksService.getById(favBookData.bookId)))
+      throw new NotFoundException('Book not found');
+
+    return this.booksService.addToFav(favBookData);
   }
 }
